@@ -1,0 +1,33 @@
+24 characters 7 bits high  8 bits wide with spacing
+
+happy new year
+....+....+....+....+....+
+
+stop wars now    peace
+
+http://www.fontshop.com/fonts/singles/fontfont/ff_dot_matrix_two_ot_regular/?acs_p=1
+
+1200 baud 120cps  960 bps ~ 1 ms time per bit
+
+ ...
+.   .
+.   . 
+.   .
+.....
+.   .
+.   .
+
+3 4 3 0
+F 4 F 0
+
+7 8 7 
+E 8 E
+
+perspective   1" at 2'        24mm at .5m    50mm at 1m    400m at  8km
+bit                                                         60
+tiny                                                         6  20'
+
+
+1 cm at 1 meter      1 m at 100 m        100 m at 10 km     bit=13 m
+ 
+

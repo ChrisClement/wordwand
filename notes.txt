@@ -1,0 +1,37 @@
+ww4
+           uno     dip      9p-Dconn
+top lamp = d7        9      9  
+           d8        8      8
+           d9        7      7
+           d10       6      6
+           d11       5      5 
+           d12       4      4
+           d13       3      3
+
++12v                        1 
+
+
+ww5         rs232
+uno  db9    mm     ww
+      1     nc
+7     2     blu    p1   column high
+8     3     org    p2
+9     4     brn w  p3
+2     5     blu w  p4
+3     6     brn    p5
+12    7     grn w  p6
+13    8     grn    p7
+      9     org w  +12v
+
+
+
+irfz44
+        25k      25k          leds
+25k npn     npn       irfz44 
+
+
+uno      hc05
+
+gnd  blk  gnd
++3.3 red  vcc
+10   vio  txd

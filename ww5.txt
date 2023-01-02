@@ -1,0 +1,2937 @@
+//WordWand V - Chris Clement - CJC - 07/21/2012
+//Modify WW4 for Bluetooth HC05
+//This resurrects earlier experiments with an idea I
+//had back in 1981. The prototypes I made then used NE2
+//neon bulbs and really crummy LEDS but could be seen up to
+//a mile away at night. The lamps had to turn on and off
+//in a millisecond.  
+
+//Output pins are used to drive seven lights in a vertical column.
+//Turning them on and off at the right times makes dot-matrix
+//characters that can form words using persistence of vision
+//when your eyes move, or the column moves.
+
+//Use Bluetooth terminal to enter words and traing spaces, the enter 
+//a period to start the display.
+
+#include <SoftwareSerial.h>
+char junk;
+//int display1 =0;
+String inputString=" ";
+String inputStrin2=" ";
+
+  // you can also look for a substring in the middle of a string:
+//  if (stringOne.substring(14,18) == "text") {
+
+//  } 
+SoftwareSerial mySerial(10, 11); // RX, TX
+
+int t1=3;int t2=3;
+int p1=7;int p2=8;int p3=9;int p4=2;int p5=3;int p6=12;int p7=13;
+int k=0;
+String s1="Word Wand Magic Lantern";
+String s2="Word Wand   ";
+String s3="";
+int slen1=0;
+int di=0;
+int sw1=0;//set to  for default s1
+
+
+void setup()     
+{
+//pinMode(13, OUTPUT);
+  // set the data rate for the SoftwareSerial port
+  mySerial.begin(9600);
+  //debug monitor
+  Serial.begin(9600);
+  Serial.println("Hello, world0");
+
+pinMode(p1, OUTPUT); pinMode(p2, OUTPUT); // 7 8                         
+pinMode(p3, OUTPUT); pinMode(p4, OUTPUT); // 9 10     10 rx   11 tx      use 2 3
+pinMode(p5, OUTPUT); pinMode(p6, OUTPUT); // 11 12                       
+pinMode(p7, OUTPUT);                      // 13 last 
+
+//get the bluetooth text
+
+
+//inputStrin2=s2;
+//slen1=inputStrin2.length();
+   
+
+}
+
+void loop()     // run over and over again
+{
+//http://www.asciitable.com/  //http://arduino.cc/it/Reference/HomePage
+//http://www.fontshop.com/fonts/singles/fontfont/ff_dot_matrix_two_ot_regular/?acs_p=1
+//....+....+....+....+....+....+    ascii decimal
+//  0123456789                      048-057
+//    ABCDEFGHIJKLMNOPQRSTUVWXYZ    065-090
+// abcdefghijklmnopqrstuvwxyz       097-122
+// space=32
+//87 111 114 100 32   87 97 110 100 32   
+//77 97 103 105 99 32   76 97 110 116 101 114 110   32 32 32 
+//for(int i=0;i<2;i++){
+//I wound up doing it more directly but left the notes above for 
+//possible expansion. WordWand III was driven by a serial 1200 baud stream.
+
+//Just spell message out with routine calls in the Arduino Uno:
+if(sw1==0){
+  if(mySerial.available()){
+  while(mySerial.available())
+    {
+      char inChar = (char)mySerial.read(); //read the input
+      inputString += inChar;        //make a string of the characters coming on serial
+      inputStrin2 += inChar;
+    }
+    //Serial.println(inputString.length());
+    while (mySerial.available() > 0)  
+    { junk = mySerial.read() ; }      // clear the serial buffer
+    if(inputString.substring(0,1) != "."){         //in case of 'a' turn the LED on
+      //digitalWrite(13, HIGH);
+      //inputStrin2+=inputString.substring(0,1);  
+    }else if(inputString.substring(0,1) == "."){   //incase of 'b' turn the LED off
+      //digitalWrite(13, LOW);
+      sw1=1;
+    }
+    inputString = "";
+  }
+}
+
+if(sw1==1){
+//if(inputStrin2.substring(0,1)==" "){inputStrin2=s1+"        ";}
+slen1=inputStrin2.length()-6; 
+for (int i = 0; i < slen1+1;i++) {
+  di=i;
+  display1(); 
+}
+
+
+}
+}//loop  
+
+void display1(){
+int i=di; //Serial.println("@");
+s3=inputStrin2.substring(i,i+1);
+
+Serial.println(s3);
+if (s3 == " ") {lights_space();}
+
+if (s3 == "A") {lights_A();}
+if (s3 == "B") {lights_B();}
+if (s3 == "C") {lights_C();}
+if (s3 == "D") {lights_D();}
+if (s3 == "E") {lights_E();}
+if (s3 == "F") {lights_F();}
+if (s3 == "G") {lights_G();}
+if (s3 == "H") {lights_H();}
+if (s3 == "I") {lights_I();}
+if (s3 == "J") {lights_J();}
+if (s3 == "K") {lights_K();}
+if (s3 == "L") {lights_L();}
+if (s3 == "M") {lights_M();}
+if (s3 == "N") {lights_N();}
+if (s3 == "O") {lights_O();}
+if (s3 == "P") {lights_P();}
+if (s3 == "Q") {lights_Q();}
+if (s3 == "R") {lights_R();}
+if (s3 == "S") {lights_S();}
+if (s3 == "T") {lights_T();}
+if (s3 == "U") {lights_U();}
+if (s3 == "V") {lights_V();}
+if (s3 == "W") {lights_W();}
+if (s3 == "X") {lights_X();}
+if (s3 == "Y") {lights_Y();}
+if (s3 == "Z") {lights_Z();}
+
+if (s3 == "a") {lights_a();}
+if (s3 == "b") {lights_b();}
+if (s3 == "c") {lights_c();}
+if (s3 == "d") {lights_d();}
+if (s3 == "e") {lights_e();}
+if (s3 == "f") {lights_f();}
+if (s3 == "g") {lights_g();}
+if (s3 == "h") {lights_h();}
+if (s3 == "i") {lights_i();}
+if (s3 == "j") {lights_j();}
+if (s3 == "k") {lights_k();}
+if (s3 == "l") {lights_l();}
+if (s3 == "m") {lights_m();}
+if (s3 == "n") {lights_n();}
+if (s3 == "o") {lights_o();}
+if (s3 == "p") {lights_p();}
+if (s3 == "q") {lights_q();}
+if (s3 == "r") {lights_r();}
+if (s3 == "s") {lights_s();}
+if (s3 == "t") {lights_t();}
+if (s3 == "u") {lights_u();}
+if (s3 == "v") {lights_v();}
+if (s3 == "w") {lights_w();}
+if (s3 == "x") {lights_x();}
+if (s3 == "y") {lights_y();}
+if (s3 == "z") {lights_z();}
+
+/*
+if (s3 == "0") {lights_0();}
+if (s3 == "1") {lights_1();}
+if (s3 == "2") {lights_2();}
+if (s3 == "3") {lights_3();}
+if (s3 == "4") {lights_4();}
+if (s3 == "5") {lights_5();}
+if (s3 == "6") {lights_6();}
+if (s3 == "7") {lights_7();}
+if (s3 == "8") {lights_8();}
+if (s3 == "9") {lights_9();}
+
+
+if (s3 == "!") {lights_s00();}
+if (s3 == "@") {lights_s01();}
+if (s3 == "#") {lights_s02();}
+if (s3 == "$") {lights_s03();}
+if (s3 == "%") {lights_s04();}
+if (s3 == "^") {lights_s05();}
+if (s3 == "&") {lights_s06();}
+if (s3 == "*") {lights_s07();}
+if (s3 == "(") {lights_s08();}
+if (s3 == ")") {lights_s09();}
+if (s3 == "-") {lights_s10();}
+if (s3 == "+") {lights_s11();}
+if (s3 == "=") {lights_s12();}
+if (s3 == ":") {lights_s13();}
+if (s3 == ";") {lights_s14();}
+if (s3 == "'") {lights_s15();}
+if (s3 == "<") {lights_s16();}
+if (s3 == ">") {lights_s17();}
+if (s3 == "?") {lights_s18();}
+if (s3 == "/") {lights_s19();}
+*/
+//blank column
+// delay(t1);
+ digitalWrite(p1, LOW); digitalWrite(p2, LOW); digitalWrite(p3, LOW); digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW); digitalWrite(p6, LOW); digitalWrite(p7, LOW); delay(t2*t1);
+
+}//display1
+
+//allon
+void allon(){ 
+ digitalWrite(p1, HIGH); digitalWrite(p2, HIGH); digitalWrite(p3, HIGH); digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH); digitalWrite(p6, HIGH); digitalWrite(p7, HIGH); //delay(t2*t1);
+}//allon
+
+//Space routine can be used to start other 5x7 symbols with copy paste.
+void lights_space(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(5*t1);
+/*
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+*/
+
+}//lights_space
+
+// UPPER CASE   HIGH
+
+void lights_A(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_A
+
+void lights_B(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_B
+
+void lights_C(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_C
+
+void lights_D(){
+ /*digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_D
+
+void lights_E(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_E
+
+void lights_F(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_F
+
+void lights_G(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_G
+
+void lights_H(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+}//lights_H
+
+void lights_I(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_I
+
+void lights_J(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_J
+
+void lights_K(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_K
+
+void lights_L(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_L
+
+void lights_M(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+}//lights_M
+
+void lights_N(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+}//lights_N
+
+void lights_O(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_O
+
+void lights_P(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_P
+
+void lights_Q(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_Q
+
+void lights_R(){
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_R
+
+void lights_S(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_S
+
+void lights_T(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+/* digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);*/ allon();
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_T
+
+void lights_U(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_U
+
+void lights_V(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_V
+
+void lights_W(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_W
+
+void lights_X(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_X
+
+void lights_Y(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_Y
+
+void lights_Z(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_Z
+
+//lower case
+
+void lights_a(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_a
+
+void lights_b(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_b
+
+void lights_c(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_c
+
+void lights_d(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_d
+
+void lights_e(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_e
+
+void lights_f(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_f
+
+void lights_g(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_g
+
+void lights_h(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_h
+
+void lights_i(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_i
+
+void lights_j(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_j
+
+void lights_k(){
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_k
+
+void lights_l(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_l
+
+void lights_m(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_m
+
+void lights_n(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_n
+
+void lights_o(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_o
+
+void lights_p(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_p
+
+void lights_q(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_q
+
+void lights_r(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_r
+
+void lights_s(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_s
+
+void lights_t(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_t
+
+void lights_u(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_u
+
+void lights_v(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_v
+
+void lights_w(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_w
+
+void lights_x(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_x
+
+void lights_y(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_y
+
+void lights_z(){
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW);
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_z
+/*
+void lights_0(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_0
+
+void lights_1(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_1
+
+void lights_2(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+}//lights_2
+
+void lights_3(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_3
+
+void lights_4(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_4
+
+void lights_5(){   
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_5
+
+void lights_6(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_6
+
+void lights_7(){   
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_7
+
+void lights_8(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_8
+
+void lights_9(){   
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, LOW);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, HIGH);
+ delay(t1);
+ digitalWrite(p1, HIGH);
+ digitalWrite(p2, LOW); 
+ digitalWrite(p3, LOW);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, LOW);
+ digitalWrite(p6, HIGH);
+ digitalWrite(p7, LOW);
+ delay(t1);
+ digitalWrite(p1, LOW);
+ digitalWrite(p2, HIGH); 
+ digitalWrite(p3, HIGH);
+ digitalWrite(p4, HIGH);
+ digitalWrite(p5, HIGH);
+ digitalWrite(p6, LOW);
+ digitalWrite(p7, LOW);
+ delay(t1);
+}//lights_9
+*/
